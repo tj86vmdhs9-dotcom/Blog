@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>hello</title>
+    </head>
+    <body>
+        <h1>welcome!</h1>
+        <button id = 'submit'>+</button>
+        <form action="/newpost" id = 'blog' method="post" hidden>
+            <input type="text" name = 'title'placeholder='Write your title'>
+            <textarea name="content" placeholder="Start typing" id=""></textarea>
+            <button type = 'submit'>Ok</button>
+        </form>
+        <%for(let post of posts){%>
+            <%=post.title%>
+            <%=post.content%>
+        <%}%>
+        <script>
+            let button = document.getElementById('submit')
+            button.addEventListener('click',()=>{
+            let blog = document.getElementById('blog')
+            blog.hidden = !blog.hidden
+            console.log(blog.hidden)
+            })
+        </script>
+    </body>
+</html>
