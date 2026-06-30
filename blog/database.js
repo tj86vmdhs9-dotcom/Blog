@@ -20,6 +20,14 @@ async function connect (){
         title TEXT,
         content TEXT
         )`)
+    await db.exec(
+        `CREATE TABLE IF NOT EXISTS comments(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        userlogin TEXT,
+        content TEXT,
+        blog_id INTEGER
+        )`
+    )
 }
 async function isUser(username){
     let user = await db.get(
@@ -69,4 +77,15 @@ async function getPostsByLogin(login) {
     )
     return(posts)
 }
-module.exports = {connect,isUser,createUser,userExists,newPost,getAllPosts,getPostsByLogin}
+async function getPostById(id) {
+    let res = await db.get(`SELECT * FROM blogs WHERE id = ?`,[id])
+    return(res)
+}
+async function getCommentsByPostId(post_id) {
+    let res = await db.all(`SELECT * FROM comments WHERE blog_id =? `,[blog_id])
+    return(res)
+}
+async function addComment(content,userlogin,post_id) {
+    await db.run(`INSERT INTO comments (userlogin,blog_id,content) VALUES  (?,?,?)`,[userlogin,post_id,content])
+}
+module.exports = {connect,isUser,createUser,userExists,newPost,getAllPosts,getPostsByLogin,getPostById,getCommentsByPostId,addComment}

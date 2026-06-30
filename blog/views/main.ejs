@@ -11,8 +11,10 @@
             <button type = 'submit'>Ok</button>
         </form>
         <%for(let post of posts){%>
+            <div class = 'post' data-id='<%=post.id%>'>
             <%=post.title%>
             <%=post.content%>
+        </div>
         <%}%>
         <script>
             let button = document.getElementById('submit')
@@ -21,6 +23,13 @@
             blog.hidden = !blog.hidden
             console.log(blog.hidden)
             })
+            let posts = document.getElementsByClassName('post')
+            for(let post of posts){
+                post.addEventListener('click',()=>{
+                    let blog_id = post.dataset.id
+                    window.location.href = '/post/'+blog_id
+                })
+            }
         </script>
     </body>
 </html>

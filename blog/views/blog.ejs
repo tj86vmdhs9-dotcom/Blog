@@ -9,5 +9,15 @@
             <p><%=post.content%></p>
         </div>
         <a href="/">Back</a>
+        <form action="/post/<%=post.id%>" method="post">
+            <input type="text" placeholder="Write your comment" name = 'content'>
+            <button type = 'submit'>Send</button>
+        </form>
+        <h2>Comments</h2>
+        <div>
+            <%for(let comment of comments){%>
+                <p><%=comment.userlogin%>:<%=comment.content%></p>
+            <%}%>
+        </div>
     </body>
 </html>

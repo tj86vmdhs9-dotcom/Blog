@@ -91,4 +91,26 @@ app.post('/newpost',async (req,res)=>{
         res.redirect('/')
     }
 })
+app.get('/post/:id',async (req,res)=>{
+    let id = req.params.id
+    let post = await db.getPostById(id)
+    let comments = await db.getCommentsByPostId(id)
+    res.render('blog',{post,comments})
+})
+app.post('/post/:id',async(req,res)=>{
+    let userlogin = req.session.login
+    let content = req.body.content
+    let resu = await db.isUser(userlogin)
+    if(resu = false){
+        res.redirect('/register')
+    }
+    else{
+        if(!content){
+            res.redirect('/post/'+id)
+        }
+        else{
+            db.addComment(content,userlogin,req.params.id)
+        }
+    }
+})
 StartServer()
