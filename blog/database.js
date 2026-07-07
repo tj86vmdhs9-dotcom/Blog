@@ -1,5 +1,6 @@
 const sqlite3 = require('sqlite3')
 const sqlite = require('sqlite')
+const bcrypt = require('bcrypt')
 let db = null
 
 async function connect (){
@@ -42,16 +43,21 @@ async function isUser(username){
 }
 async function createUser(login,password) {
     await db.run(
-        `INSERT INTO users(login,password) VALUES (?,?)`,[login,password]
+        `INSERT INTO users(login,password) VALUES (?,?)`,[login,await bcrypt.hash(password,10)]
     )
     }
 async function userExists(login,password) {
     try{
         let user=  await db.get(
-        `SELECT * FROM users WHERE login =?  AND password =? `,[login,password]
+        `SELECT * FROM users WHERE login =? `,[login]
     )
     if(user){
-        return(true)
+        if(await bcrypt.compare(password,user.password)){
+            return(true)     
+        }
+        else{
+            return(false)
+        }
     }
     else{
         return(false)
@@ -82,7 +88,7 @@ async function getPostById(id) {
     return(res)
 }
 async function getCommentsByPostId(post_id) {
-    let res = await db.all(`SELECT * FROM comments WHERE blog_id =? `,[blog_id])
+    let res = await db.all(`SELECT * FROM comments WHERE blog_id =? `,[post_id])
     return(res)
 }
 async function addComment(content,userlogin,post_id) {
